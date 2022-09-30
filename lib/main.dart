@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:loan_calculator_app/Views/loan_cal_view.dart';
+import 'package:loan_calculator_app/Views/splash_screen.dart';
 
 void main() {
   runApp(
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(),
-      home: const LoanCalculator(),
+      home: const LoanCalculatorSplashScreen(),
     );
   }
 }

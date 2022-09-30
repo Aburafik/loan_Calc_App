@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:loan_calculator_app/Components/colors.dart';
 import 'package:loan_calculator_app/Components/estimated_card.dart';
@@ -13,6 +15,10 @@ class _LoanCalculatorState extends State<LoanCalculator> {
   int selectedTermIndex = 0;
   int selectedAmounIndex = 0;
 
+  double currentInterstRate = 1.8;
+  double totalLoanPayment = 0.00;
+  double monthlyPayment = 0.00;
+
   TextEditingController loanAmountController = TextEditingController();
   TextEditingController loanTermController = TextEditingController();
 
@@ -22,9 +28,21 @@ class _LoanCalculatorState extends State<LoanCalculator> {
   @override
   void initState() {
     super.initState();
-    loanTermController.text = loanTerm[0].toString();
+    loanTermController.text = "0";
+    loanAmountController.text = "0";
+  }
 
-    loanAmountController.text = loanAmount[0].toString();
+  refereshPage() {
+    setState(() {
+      totalLoanPayment = 0.00;
+      monthlyPayment = 0.00;
+      loanTermController.text = "0";
+
+      loanAmountController.text = "0";
+
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Calculator refereshed.......")));
+    });
   }
 
   @override
@@ -35,6 +53,8 @@ class _LoanCalculatorState extends State<LoanCalculator> {
         .copyWith(color: Colors.white, fontSize: 20);
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () => refereshPage(), icon: Icon(Icons.refresh)),
         elevation: 0,
         backgroundColor: commonColor,
         title: Text("Loan Calculator", style: textStyle),
@@ -65,7 +85,7 @@ class _LoanCalculatorState extends State<LoanCalculator> {
                     ),
                   ),
                   Text(
-                    "GHC 12,000",
+                    "GHC ${monthlyPayment.toStringAsFixed(2)}",
                     style: textStyle.copyWith(
                       fontSize: 40,
                       color: Colors.white,
@@ -78,11 +98,13 @@ class _LoanCalculatorState extends State<LoanCalculator> {
                       child: Row(
                         children: [
                           EstimatedCard(
+                            cardValue: "$currentInterstRate %",
                             cardTitle: "Interest Rate",
                             cardDescription: "Based on today's est. loan rate",
                           ),
                           const SizedBox(width: 15),
                           EstimatedCard(
+                            cardValue: totalLoanPayment.toStringAsFixed(2),
                             cardTitle: "Est. Loan Total",
                             cardDescription:
                                 "Est. cost of loan based on selection",
@@ -239,9 +261,25 @@ class _LoanCalculatorState extends State<LoanCalculator> {
                       ),
                     ),
                     const SizedBox(height: 40),
+                    ///////////////////
+
                     TextButton(
                       style: TextButton.styleFrom(backgroundColor: commonColor),
-                      onPressed: () {},
+                      onPressed: () {
+                        double p = int.parse(loanAmountController.text) *
+                            0.018 *
+                            pow((1 + 0.018),
+                                int.parse(loanTermController.text)) /
+                            (pow((1 + 0.018),
+                                    int.parse(loanTermController.text)) -
+                                1);
+
+                        setState(() {
+                          monthlyPayment = p;
+
+                          totalLoanPayment = p * 24;
+                        });
+                      },
                       child: Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: Text(

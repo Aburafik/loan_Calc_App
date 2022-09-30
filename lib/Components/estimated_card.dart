@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:loan_calculator_app/Components/colors.dart';
 
 class EstimatedCard extends StatelessWidget {
-  EstimatedCard({Key? key, this.cardDescription, this.cardTitle})
+  EstimatedCard(
+      {Key? key, this.cardDescription, this.cardTitle, this.cardValue})
       : super(key: key);
 
   String? cardTitle;
   String? cardDescription;
+
+  String? cardValue;
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +39,8 @@ class EstimatedCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const Text(
-                "33.0%",
+              Text(
+                cardValue!,
                 style: TextStyle(fontSize: 25),
                 textAlign: TextAlign.center,
               ),
